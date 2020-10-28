@@ -4,6 +4,7 @@ import com.muyi.mymvc.converter.StudentConverter;
 import com.muyi.mymvc.dto.StudentDto;
 import com.muyi.mymvc.model.Student;
 import com.muyi.mymvc.repository.StudentRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,8 +32,7 @@ public class StudentService {
     }
 
     public void deleteStudentById(Integer id){
-        Student st = studentRepository.findById(id).get();
-        studentRepository.delete(st);
+        studentRepository.deleteById(id);
     }
 
     public void saveStudent(StudentDto stDto){
@@ -46,6 +46,8 @@ public class StudentService {
         if(optional.isPresent())
             st = optional.get();
 
-        return converter.studentToDto(st);
+        StudentDto stDto = new StudentDto();
+        BeanUtils.copyProperties(st, stDto); //converter.studentToDto(st);
+        return stDto;
     }
 }
