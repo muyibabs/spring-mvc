@@ -14,7 +14,7 @@
 
 </head>
 <body>
-Welcome ${userDto.name}
+Welcome ${loggedInUser.name}
 <div class="container my-2">
     <h2 class="sub-header">Students</h2>
     <a href = "<c:url value = "addnew.do"/>" class="btn btn-primary btn-sm mb-3">New Student</a>

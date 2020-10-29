@@ -11,9 +11,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
+@SessionAttributes("loggedInUser")
 public class MainController {
     //use session
     //transform dto
@@ -34,15 +36,15 @@ public class MainController {
     }
 
     @PostMapping("/login.do")
-    public String validateUser(Model model, @ModelAttribute UserDto dto){
+    public String validateUser(Model model, HttpSession session, @ModelAttribute UserDto dto){
         dto = userService.validateUser(dto);
 
         if(dto==null || !dto.isValidated()) {
             model.addAttribute("user", dto);
             return "login";
         }
-
-        model.addAttribute("userDto", dto);
+        //session.setAttribute("loggedInUser", dto);
+        model.addAttribute("loggedInUser", dto);
         return "redirect:/dashboard";
     }
 
@@ -54,6 +56,9 @@ public class MainController {
 
     @GetMapping("dashboard")
     private String updateModel(Model model){
+        if(model.getAttribute("loggedInUser")==null){
+            return "redirect:/";
+        }
         List<StudentDto> studentDtos = studentService.getAllStudents();
         model.addAttribute("students", studentDtos);
         return "dashboard";
